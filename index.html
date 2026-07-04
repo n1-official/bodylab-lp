@@ -12,19 +12,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
+  color-scheme:dark;
   --bg:#101114;
   --bg2:#16181d;
   --bg3:#1d2026;
   --ink:#eceae4;
   --ink-soft:rgba(236,234,228,.68);
-  --ink-dim:rgba(236,234,228,.42);
+  --ink-dim:rgba(236,234,228,.55);
+  --ink-faint:rgba(236,234,228,.4);
   --gold:#b39359;
   --gold-soft:rgba(179,147,89,.55);
   --hairline:rgba(236,234,228,.12);
   --serif:"Shippori Mincho","Hiragino Mincho ProN",serif;
   --sans:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;
   --en:"Cormorant Garamond",Georgia,serif;
-  --w:min(1120px,92vw);
+  --ease:cubic-bezier(.22,1,.36,1);
+  --w:min(1120px,calc(100% - 48px));
   --header-h:72px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -36,9 +39,14 @@ body{
   font-weight:300;
   line-height:1.9;
   letter-spacing:.04em;
+  line-break:strict;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
+p{text-wrap:pretty}
+h1,.h2,.reason-txt h3,.flow-item h3,.form h3,.concept-pull,.trainer-quote{word-break:auto-phrase;font-feature-settings:"palt"}
+.hero-sub,.cta-note,.reserve-note{word-break:auto-phrase}
+.concept-pull,.trainer-quote{text-indent:-.5em}
 img{max-width:100%;display:block}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
@@ -61,6 +69,7 @@ ul{list-style:none}
   line-height:1.6;
   letter-spacing:.06em;
   margin-top:26px;
+  font-feature-settings:"palt";
 }
 .lead{color:var(--ink-soft);margin-top:24px;max-width:38em;font-size:15px}
 section{padding:clamp(90px,12vw,150px) 0;position:relative}
@@ -89,12 +98,13 @@ section{padding:clamp(90px,12vw,150px) 0;position:relative}
 .ph.has-img{background-image:var(--img)!important;background-size:cover;background-position:center}
 .ph.has-img::before,.ph.has-img::after{opacity:0}
 
-/* スクロール出現 */
-.js .reveal{opacity:0;transform:translateY(34px);transition:opacity 1s cubic-bezier(.22,1,.36,1),transform 1s cubic-bezier(.22,1,.36,1)}
-.js .reveal.in{opacity:1;transform:none}
-.js .reveal.d1{transition-delay:.12s}
-.js .reveal.d2{transition-delay:.24s}
-.js .reveal.d3{transition-delay:.36s}
+/* スクロール出現（transitionではなくanimation＝hover用transitionと衝突させない） */
+.js .reveal{opacity:0}
+.js .reveal.in{animation:rise 1s var(--ease) both}
+.js .reveal.d1.in{animation-delay:.12s}
+.js .reveal.d2.in{animation-delay:.24s}
+.js .reveal.d3.in{animation-delay:.36s}
+@keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
 
 /* CTAボタン */
 .btn{
@@ -114,12 +124,7 @@ section{padding:clamp(90px,12vw,150px) 0;position:relative}
 .btn span{position:relative;z-index:1}
 .btn .arw{font-family:var(--en);font-size:17px;transition:transform .35s}
 .btn:hover .arw{transform:translateX(6px)}
-.btn-ghost{
-  background:transparent;color:var(--ink);
-  border:1px solid rgba(236,234,228,.35);
-}
-.btn-ghost::before{background:rgba(236,234,228,.1)}
-.cta-note{margin-top:16px;font-size:12px;color:var(--ink-dim);letter-spacing:.1em}
+.cta-note{margin-top:16px;font-size:12.5px;color:var(--ink-dim);letter-spacing:.1em}
 
 /* ---------- ヘッダー ---------- */
 header{
@@ -141,7 +146,7 @@ header.scrolled{
 .logo small{font-family:var(--en);font-size:9px;letter-spacing:.5em;color:var(--gold)}
 nav{display:flex;gap:36px}
 nav a{font-size:12.5px;letter-spacing:.18em;color:var(--ink-soft);position:relative;padding:6px 0}
-nav a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .4s}
+nav a::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .4s var(--ease)}
 nav a:hover{color:var(--ink)}
 nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .header-cta{
@@ -150,12 +155,12 @@ nav a:hover::after{transform:scaleX(1);transform-origin:left}
   padding:11px 26px;transition:background .35s,color .35s;
 }
 .header-cta:hover{background:var(--gold);color:#15130d}
-@media(max-width:900px){nav{display:none}}
+@media(max-width:1020px){nav{display:none}}
 
 /* ---------- HERO ---------- */
 .hero{
   min-height:100svh;
-  display:flex;align-items:flex-end;
+  display:flex;align-items:center;
   padding:0;position:relative;
 }
 .hero-bg{
@@ -165,6 +170,7 @@ nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .hero-bg::after{
   content:"";position:absolute;inset:0;
   background:
+    linear-gradient(to bottom,rgba(16,17,20,.62) 0%,transparent 160px),
     linear-gradient(to right,rgba(16,17,20,.92) 0%,rgba(16,17,20,.55) 45%,rgba(16,17,20,.15) 100%),
     linear-gradient(to top,rgba(16,17,20,.95) 0%,transparent 45%);
 }
@@ -173,7 +179,7 @@ nav a:hover::after{transform:scaleX(1);transform-origin:left}
 .hero-in{
   position:relative;z-index:2;
   width:var(--w);margin:0 auto;
-  padding:calc(var(--header-h) + 40px) 0 clamp(70px,10vh,120px);
+  padding:calc(var(--header-h) + 30px) 0 clamp(50px,7vh,90px);
 }
 .hero-label{
   font-family:var(--en);font-size:12px;letter-spacing:.5em;color:var(--gold);
@@ -184,29 +190,24 @@ h1{
   font-family:var(--serif);font-weight:600;
   font-size:clamp(36px,6.4vw,72px);
   line-height:1.42;letter-spacing:.05em;
+  font-feature-settings:"palt";
+  text-indent:-.5em;
 }
 h1 .gold{color:var(--gold)}
 .hero-sub{
   margin-top:30px;max-width:34em;
-  color:var(--ink-soft);font-size:clamp(13.5px,1.5vw,15.5px);line-height:2.15;
+  color:rgba(236,234,228,.8);font-size:clamp(14px,1.5vw,15.5px);line-height:2.15;
 }
-.hero-ctas{margin-top:44px;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.hero-ctas{margin-top:44px;display:flex;flex-direction:column;align-items:flex-start;gap:0}
+.hero-ctas .cta-note{margin-top:20px}
 .hero-vert{
-  position:absolute;right:calc((100vw - var(--w))/2 * -1 + 28px);
-  right:28px;top:50%;transform:translateY(-50%);z-index:2;
+  position:absolute;right:28px;top:50%;transform:translateY(-50%);z-index:2;
   writing-mode:vertical-rl;
-  font-family:var(--serif);font-size:12.5px;letter-spacing:.5em;color:var(--ink-dim);
+  font-family:var(--serif);font-size:12.5px;letter-spacing:.5em;color:var(--ink-faint);
   display:flex;align-items:center;gap:22px;
 }
 .hero-vert::after{content:"";width:1px;height:70px;background:var(--gold-soft)}
 @media(max-width:900px){.hero-vert{display:none}}
-.scroll-cue{
-  position:absolute;left:50%;bottom:26px;transform:translateX(-50%);z-index:2;
-  font-family:var(--en);font-size:10px;letter-spacing:.4em;color:var(--ink-dim);
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-}
-.scroll-cue::after{content:"";width:1px;height:52px;background:linear-gradient(to bottom,var(--gold),transparent);animation:cue 2.2s ease-in-out infinite}
-@keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 
 /* ---------- CONCEPT ---------- */
 .concept{background:var(--bg)}
@@ -233,7 +234,7 @@ h1 .gold{color:var(--gold)}
 .marquee-track{display:inline-block;animation:mq 30s linear infinite}
 .marquee span{
   font-family:var(--en);font-size:15px;letter-spacing:.5em;text-transform:uppercase;
-  color:rgba(236,234,228,.22);padding:0 34px;
+  color:rgba(236,234,228,.22);padding:0;
 }
 .marquee span i{font-style:normal;color:var(--gold-soft)}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -249,6 +250,7 @@ h1 .gold{color:var(--gold)}
   font-family:var(--en);font-weight:400;font-size:clamp(64px,7vw,96px);
   color:transparent;-webkit-text-stroke:1px var(--gold-soft);
   line-height:1;
+  font-variant-numeric:lining-nums;
 }
 .reason-txt h3{
   font-family:var(--serif);font-weight:600;font-size:clamp(21px,2.4vw,27px);
@@ -282,12 +284,18 @@ h1 .gold{color:var(--gold)}
 .stat b{
   font-family:var(--en);font-weight:400;font-size:clamp(46px,5.5vw,64px);
   color:var(--ink);line-height:1;display:inline-flex;align-items:baseline;
+  font-variant-numeric:lining-nums;
 }
 .stat b em{font-style:normal;font-size:.42em;color:var(--gold);margin-left:6px}
 .stat p{margin-top:14px;font-size:12.5px;letter-spacing:.16em;color:var(--ink-soft)}
+@media(max-width:900px){
+  .stat{padding:38px 16px}
+  .stat p{font-size:11.5px;letter-spacing:.1em}
+}
 @media(max-width:720px){
   .stats{grid-template-columns:1fr}
   .stat{border-left:1px solid var(--hairline);padding:30px}
+  .stat p{font-size:12.5px;letter-spacing:.16em}
 }
 .voices{margin-top:clamp(60px,8vw,90px);display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
 .voice{
@@ -330,7 +338,15 @@ h1 .gold{color:var(--gold)}
 }
 @media(max-width:900px){
   .trainer-grid{grid-template-columns:1fr}
-  .trainer-img{max-width:420px}
+  .trainer-img{max-width:none;max-height:min(78vh,760px)}
+  .trainer-msg{max-width:none}
+  .concept-body{max-width:none}
+  .reason-txt p{max-width:none}
+  .voice p{max-width:36em}
+  .reserve-note{max-width:none}
+  br.pc{display:none}
+  .footer-grid{flex-direction:column;gap:30px}
+  footer{padding-bottom:110px}
 }
 
 /* ---------- FLOW ---------- */
@@ -345,7 +361,7 @@ h1 .gold{color:var(--gold)}
   border-right:1px solid var(--hairline);
 }
 .flow-item:first-child{border-left:1px solid var(--hairline)}
-.flow-num{font-family:var(--en);font-size:15px;letter-spacing:.3em;color:var(--gold)}
+.flow-num{font-family:var(--en);font-size:15px;letter-spacing:.3em;color:var(--gold);font-variant-numeric:lining-nums}
 .flow-item h3{
   font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.1em;
   margin-top:20px;line-height:1.7;
@@ -364,7 +380,7 @@ h1 .gold{color:var(--gold)}
 .faq-item{border-bottom:1px solid var(--hairline)}
 .faq-q{
   width:100%;background:none;border:none;color:var(--ink);
-  font-family:var(--sans);font-weight:400;font-size:15.5px;letter-spacing:.08em;
+  font-family:var(--sans);font-weight:500;font-size:16px;letter-spacing:.08em;
   padding:30px 54px 30px 4px;text-align:left;cursor:pointer;position:relative;
   display:flex;gap:22px;align-items:baseline;line-height:1.8;
 }
@@ -374,10 +390,12 @@ h1 .gold{color:var(--gold)}
   width:12px;height:12px;
   border-right:1px solid var(--gold);border-bottom:1px solid var(--gold);
   transform:translateY(-70%) rotate(45deg);
-  transition:transform .45s;
+  transition:transform .45s var(--ease);
 }
 .faq-item.open .faq-q::after{transform:translateY(-30%) rotate(225deg)}
-.faq-a{max-height:0;overflow:hidden;transition:max-height .55s cubic-bezier(.22,1,.36,1)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .55s var(--ease)}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+.faq-a-wrap{overflow:hidden;min-height:0}
 .faq-a-in{
   padding:0 4px 34px 43px;color:var(--ink-soft);font-size:14px;max-width:44em;
   display:flex;gap:22px;
@@ -399,11 +417,19 @@ h1 .gold{color:var(--gold)}
   margin-top:30px;color:var(--ink-soft);font-size:14.5px;max-width:27em;
 }
 .reserve-slots{
-  margin-top:36px;display:inline-flex;align-items:center;gap:16px;
+  margin-top:36px;display:inline-flex;align-items:baseline;gap:16px;
   border:1px solid rgba(179,147,89,.4);padding:16px 26px;
 }
-.reserve-slots b{font-family:var(--en);font-size:26px;color:var(--gold);font-weight:500}
+.reserve-slots b{font-family:var(--serif);font-size:19px;color:var(--gold);font-weight:600;letter-spacing:.1em}
+.reserve-slots b .n{font-family:var(--en);font-size:32px;font-variant-numeric:lining-nums;font-weight:500;margin:0 2px;line-height:1}
 .reserve-slots span{font-size:12px;letter-spacing:.14em;color:var(--ink-soft)}
+.reserve-info{margin-top:44px;border-top:1px solid var(--hairline);max-width:27em}
+.reserve-info div{
+  display:flex;gap:26px;align-items:baseline;
+  padding:15px 2px;border-bottom:1px solid var(--hairline);
+}
+.reserve-info b{font-family:var(--en);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:500;width:74px;flex-shrink:0}
+.reserve-info p{font-size:13px;color:var(--ink-soft);letter-spacing:.06em}
 .form{
   background:rgba(22,24,29,.88);
   backdrop-filter:blur(8px);
@@ -422,11 +448,12 @@ h1 .gold{color:var(--gold)}
   padding:15px 16px;transition:border-color .3s;
   -webkit-appearance:none;appearance:none;border-radius:0;
 }
+.field select{padding-right:44px}
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6' fill='%23b39359'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center}
 .field textarea{min-height:90px;resize:vertical}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
 .form .btn{width:100%;margin-top:34px}
-.form-note{margin-top:18px;font-size:11.5px;color:var(--ink-dim);text-align:center;letter-spacing:.08em}
+.form-note{margin-top:18px;font-size:12px;color:var(--ink-dim);text-align:center;letter-spacing:.08em;text-wrap:balance}
 .form-done{text-align:center;padding:60px 0}
 .form-done b{font-family:var(--serif);font-size:20px;letter-spacing:.14em;display:block}
 .form-done p{margin-top:18px;font-size:13.5px;color:var(--ink-soft)}
@@ -461,6 +488,18 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
 .sticky-cta.show{transform:none}
 .sticky-cta .btn{width:100%;padding:16px}
 @media(max-width:900px){.sticky-cta{display:block}}
+@media(min-width:641px) and (max-width:900px){
+  .sticky-cta{left:auto;right:22px;bottom:22px;padding:0;background:none;border:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+  .sticky-cta .btn{width:auto;padding:17px 34px;border-radius:999px;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+  .sticky-cta .btn::before{border-radius:999px}
+}
+@media(max-width:640px){
+  .hero .btn{width:100%;justify-content:center}
+  .reserve-slots{display:flex;width:100%;justify-content:space-between;box-sizing:border-box}
+  .marquee{display:none}
+  .footer-info .sep{display:none}
+  .footer-info.menu a{display:block;padding:9px 0}
+}
 
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
@@ -490,7 +529,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
 </header>
 
 <!-- ================= HERO ================= -->
-<section class="hero" id="top" style="padding:0">
+<section class="hero" id="top">
   <div class="hero-bg"><div class="ph" data-img="hero.jpg"></div></div>
   <div class="hero-in">
     <p class="hero-label reveal">Private Gym — Nakameguro</p>
@@ -502,7 +541,6 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
     </div>
   </div>
   <div class="hero-vert">中目黒駅 徒歩四分・完全個室</div>
-  <div class="scroll-cue">Scroll</div>
 </section>
 
 <!-- ================= CONCEPT ================= -->
@@ -510,7 +548,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
   <div class="container concept-grid">
     <div class="concept-copy">
       <p class="label reveal">Concept</p>
-      <h2 class="h2 reveal d1">何度も痩せて、<br>何度も戻った。<br>それは、意思の弱さでは<br>ありません。</h2>
+      <h2 class="h2 reveal d1">何度も痩せて、<br>何度も戻った。<br>それは、意思の弱さでは<br class="pc">ありません。</h2>
       <div class="concept-body reveal d2">
         <p>短期間の無理な食事制限は、必ず反動を生みます。私たちが提供するのは、我慢のダイエットではなく「続けられる習慣」の設計。</p>
         <p>トレーニング・食事・休養をひとつずつ整え、2ヶ月後には、あなた自身の力で身体を維持できる状態をつくります。</p>
@@ -523,7 +561,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
 
 <div class="marquee" aria-hidden="true">
   <div class="marquee-track">
-    <span>Body Lab <i>&mdash;</i> Nakameguro <i>&mdash;</i> Private Training <i>&mdash;</i> Nutrition <i>&mdash;</i></span><span>Body Lab <i>&mdash;</i> Nakameguro <i>&mdash;</i> Private Training <i>&mdash;</i> Nutrition <i>&mdash;</i></span>
+    <span>Body Lab <i>&mdash;</i> Nakameguro <i>&mdash;</i> Private Training <i>&mdash;</i> Nutrition <i>&mdash;</i>&nbsp;</span><span>Body Lab <i>&mdash;</i> Nakameguro <i>&mdash;</i> Private Training <i>&mdash;</i> Nutrition <i>&mdash;</i>&nbsp;</span>
   </div>
 </div>
 
@@ -590,7 +628,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
           <div class="ph voice-face" data-img="voice-1.jpg"></div>
           <div><b>M.K さん</b><small>36歳・会社員</small></div>
         </div>
-        <div class="voice-result">&minus;6.8kg / 2months</div>
+        <div class="voice-result">&minus;6.8kg / 2 months</div>
       </div>
       <div class="voice reveal d1">
         <div class="voice-q">&ldquo;</div>
@@ -599,7 +637,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
           <div class="ph voice-face" data-img="voice-2.jpg"></div>
           <div><b>T.S さん</b><small>42歳・経営者</small></div>
         </div>
-        <div class="voice-result">&minus;8.4kg / 2months</div>
+        <div class="voice-result">&minus;8.4kg / 2 months</div>
       </div>
       <div class="voice reveal d2">
         <div class="voice-q">&ldquo;</div>
@@ -608,7 +646,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
           <div class="ph voice-face" data-img="voice-3.jpg"></div>
           <div><b>A.N さん</b><small>29歳・看護師</small></div>
         </div>
-        <div class="voice-result">&minus;5.1kg / 2months</div>
+        <div class="voice-result">&minus;5.1kg / 2 months</div>
       </div>
     </div>
   </div>
@@ -629,7 +667,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
       <div class="trainer-msg reveal d3">
         <p>大手フィットネスクラブ、アスリート指導を経て、「短期で落として終わり」の業界標準に疑問を持ちBODY LABを設立。リバウンド経験者の指導を最も得意とする。</p>
       </div>
-      <p class="trainer-quote reveal d3">「厳しくすることは、簡単です。難しいのは、その人の生活の中で"続く方法"を見つけること。私たちは身体だけでなく、習慣を一緒につくります。」</p>
+      <p class="trainer-quote reveal d3">「厳しくすることは、簡単です。難しいのは、その人の生活の中で『続く方法』を見つけること。私たちは身体だけでなく、習慣を一緒につくります。」</p>
     </div>
   </div>
 </section>
@@ -668,23 +706,23 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
 
       <div class="faq-item">
         <button class="faq-q"><span class="qm">Q.</span>運動がまったく苦手でも大丈夫ですか？</button>
-        <div class="faq-a"><div class="faq-a-in"><span class="am">A.</span><p>会員の約7割は、運動未経験からのスタートです。姿勢と可動域の評価から始め、一人ひとりのレベルに合わせて負荷を設計しますので、ご安心ください。</p></div></div>
+        <div class="faq-a"><div class="faq-a-wrap"><div class="faq-a-in"><span class="am">A.</span><p>会員の約7割は、運動未経験からのスタートです。姿勢と可動域の評価から始め、一人ひとりのレベルに合わせて負荷を設計しますので、ご安心ください。</p></div></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span class="qm">Q.</span>食事制限はきついですか？</button>
-        <div class="faq-a"><div class="faq-a-in"><span class="am">A.</span><p>「食べない」指導はしません。3食きちんと食べながら、量と選び方を整えていきます。外食や飲み会がある生活を前提にプランを組みますので、我慢を積み重ねる必要はありません。</p></div></div>
+        <div class="faq-a"><div class="faq-a-wrap"><div class="faq-a-in"><span class="am">A.</span><p>「食べない」指導はしません。3食きちんと食べながら、量と選び方を整えていきます。外食や飲み会がある生活を前提にプランを組みますので、我慢を積み重ねる必要はありません。</p></div></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span class="qm">Q.</span>体験には何を持っていけばいいですか？</button>
-        <div class="faq-a"><div class="faq-a-in"><span class="am">A.</span><p>手ぶらでお越しください。ウェア・シューズ・タオル・お水は、すべて無料でご用意しています。シャワールームも完備です。</p></div></div>
+        <div class="faq-a"><div class="faq-a-wrap"><div class="faq-a-in"><span class="am">A.</span><p>手ぶらでお越しください。ウェア・シューズ・タオル・お水は、すべて無料でご用意しています。シャワールームも完備です。</p></div></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span class="qm">Q.</span>体験後、勧誘されませんか？</button>
-        <div class="faq-a"><div class="faq-a-in"><span class="am">A.</span><p>その場でのご入会を促すことはありません。プランと料金のご案内をお渡ししますので、お持ち帰りのうえ、じっくりご検討ください。</p></div></div>
+        <div class="faq-a"><div class="faq-a-wrap"><div class="faq-a-in"><span class="am">A.</span><p>その場でのご入会を促すことはありません。プランと料金のご案内をお渡ししますので、お持ち帰りのうえ、じっくりご検討ください。</p></div></div></div>
       </div>
       <div class="faq-item">
         <button class="faq-q"><span class="qm">Q.</span>料金はいくらですか？</button>
-        <div class="faq-a"><div class="faq-a-in"><span class="am">A.</span><p>2ヶ月集中プログラムを中心に、目標に応じて複数のプランをご用意しています（分割払い対応）。体験時に、あなたに必要なプランだけをご説明します。</p></div></div>
+        <div class="faq-a"><div class="faq-a-wrap"><div class="faq-a-in"><span class="am">A.</span><p>2ヶ月集中プログラムを中心に、目標に応じて複数のプランをご用意しています（分割払い対応）。体験時に、あなたに必要なプランだけをご説明します。</p></div></div></div>
       </div>
 
     </div>
@@ -701,7 +739,12 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
         <h2 class="h2 reveal d1">最後のダイエットを、<br>始めよう。</h2>
         <p class="reserve-note reveal d2">まずは60分、あなたの身体の現在地を知ることから。測定・カウンセリング・体験トレーニングまで、すべて無料です。</p>
         <div class="reserve-slots reveal d3">
-          <span>今月の無料体験枠</span><b>残り5名</b>
+          <span>今月の無料体験枠</span><b>残り<span class="n">5</span>名</b>
+        </div>
+        <div class="reserve-info reveal d3">
+          <div><b>Open</b><p>7:00–23:00（不定休）</p></div>
+          <div><b>Access</b><p>中目黒駅 徒歩4分</p></div>
+          <div><b>Facility</b><p>完全個室・シャワー完備・ウェア無料</p></div>
         </div>
       </div>
       <form class="form reveal d2" id="trialForm" novalidate>
@@ -728,7 +771,7 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
           <textarea id="f-msg" name="message" placeholder="例：産後の体型が戻らず悩んでいます"></textarea>
         </div>
         <button class="btn" type="submit"><span>無料体験を予約する</span><span class="arw">&rarr;</span></button>
-        <p class="form-note">送信後、24時間以内にご連絡いたします。無理な勧誘は一切ありません。</p>
+        <p class="form-note">送信後24時間以内にご連絡します。無理な勧誘は一切ありません。</p>
       </form>
     </div>
   </div>
@@ -746,9 +789,9 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
         東京都目黒区上目黒一丁目（中目黒駅 徒歩4分）<br>
         営業時間 7:00–23:00／不定休
       </div>
-      <div class="footer-info">
+      <div class="footer-info menu">
         <b>MENU</b>
-        <a href="#concept">コンセプト</a>／<a href="#reason">選ばれる理由</a>／<a href="#trainer">トレーナー</a>／<a href="#faq">よくある質問</a>
+        <a href="#concept">コンセプト</a><span class="sep">／</span><a href="#reason">選ばれる理由</a><span class="sep">／</span><a href="#trainer">トレーナー</a><span class="sep">／</span><a href="#faq">よくある質問</a>
       </div>
     </div>
     <div class="footer-bottom">
@@ -818,10 +861,10 @@ document.querySelectorAll('.count').forEach(function(el){ cio.observe(el); });
 /* ---- FAQ アコーディオン ---- */
 document.querySelectorAll('.faq-item').forEach(function(item){
   var q = item.querySelector('.faq-q');
-  var a = item.querySelector('.faq-a');
+  q.setAttribute('aria-expanded', 'false');
   q.addEventListener('click', function(){
     var open = item.classList.toggle('open');
-    a.style.maxHeight = open ? a.scrollHeight + 'px' : '0px';
+    q.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 });
 
