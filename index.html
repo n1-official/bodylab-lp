@@ -104,6 +104,7 @@ section{padding:clamp(90px,12vw,150px) 0;position:relative}
 .js .reveal.d1.in{animation-delay:.12s}
 .js .reveal.d2.in{animation-delay:.24s}
 .js .reveal.d3.in{animation-delay:.36s}
+.js .reveal.done{animation:none;opacity:1}
 @keyframes rise{from{opacity:0;transform:translateY(34px)}to{opacity:1;transform:none}}
 
 /* CTAボタン */
@@ -115,7 +116,10 @@ section{padding:clamp(90px,12vw,150px) 0;position:relative}
   position:relative;overflow:hidden;
   transition:color .35s;
   border:none;cursor:pointer;
+  white-space:nowrap;
 }
+@media(max-width:640px){.btn{padding:19px 20px;font-size:14px}}
+@media(max-width:360px){.btn{font-size:13px;letter-spacing:.08em}}
 .btn::before{
   content:"";position:absolute;inset:0;background:#e6e2d8;
   transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.22,1,.36,1);
@@ -314,6 +318,7 @@ h1 .gold{color:var(--gold)}
 .voice-result{
   font-family:var(--en);font-size:13px;letter-spacing:.14em;color:var(--gold);
   border-top:1px solid var(--hairline);padding-top:16px;
+  font-variant-numeric:lining-nums;
 }
 @media(max-width:900px){.voices{grid-template-columns:1fr}}
 
@@ -366,7 +371,7 @@ h1 .gold{color:var(--gold)}
   font-family:var(--serif);font-weight:600;font-size:20px;letter-spacing:.1em;
   margin-top:20px;line-height:1.7;
 }
-.flow-item h3 small{display:block;font-family:var(--en);font-size:11px;letter-spacing:.26em;color:var(--ink-dim);margin-top:8px;font-weight:400}
+.flow-item h3 small{display:block;font-family:var(--en);font-size:11px;letter-spacing:.26em;color:var(--ink-dim);margin-top:8px;font-weight:400;font-variant-numeric:lining-nums}
 .flow-item p{margin-top:18px;font-size:13.5px;color:var(--ink-soft)}
 @media(max-width:900px){
   .flow-list{grid-template-columns:1fr}
@@ -429,7 +434,7 @@ h1 .gold{color:var(--gold)}
   padding:15px 2px;border-bottom:1px solid var(--hairline);
 }
 .reserve-info b{font-family:var(--en);font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:500;width:74px;flex-shrink:0}
-.reserve-info p{font-size:13px;color:var(--ink-soft);letter-spacing:.06em}
+.reserve-info p{font-size:13px;color:var(--ink-soft);letter-spacing:.06em;word-break:auto-phrase}
 .form{
   background:rgba(22,24,29,.88);
   backdrop-filter:blur(8px);
@@ -454,7 +459,8 @@ h1 .gold{color:var(--gold)}
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
 .form .btn{width:100%;margin-top:34px}
 .form-note{margin-top:18px;font-size:12px;color:var(--ink-dim);text-align:center;letter-spacing:.08em;text-wrap:balance}
-.form-done{text-align:center;padding:60px 0}
+.form-done{text-align:center;padding:60px 0;min-height:520px;display:flex;flex-direction:column;justify-content:center}
+.form-done p{text-wrap:pretty;word-break:auto-phrase}
 .form-done b{font-family:var(--serif);font-size:20px;letter-spacing:.14em;display:block}
 .form-done p{margin-top:18px;font-size:13.5px;color:var(--ink-soft)}
 .form-done .ok{
@@ -833,7 +839,13 @@ var io = new IntersectionObserver(function(entries){
     if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
   });
 },{threshold:.12, rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+document.querySelectorAll('.reveal').forEach(function(el){
+  io.observe(el);
+  /* アニメ終了後にanimationを外し、hover等のtransformを解放する */
+  el.addEventListener('animationend', function(ev){
+    if(ev.animationName === 'rise') el.classList.add('done');
+  });
+});
 
 /* ---- 数字カウントアップ ---- */
 var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -892,7 +904,7 @@ document.getElementById('trialForm').addEventListener('submit', function(ev){
     '<div class="form-done">' +
       '<div class="ok">&#10003;</div>' +
       '<b>ご予約を受け付けました</b>' +
-      '<p>' + name.value.trim().replace(/</g,'&lt;') + ' 様<br>24時間以内に、ご入力いただいた連絡先へ<br>体験日時のご案内をお送りします。</p>' +
+      '<p>' + name.value.trim().replace(/</g,'&lt;') + ' 様<br>24時間以内に、ご入力いただいた連絡先へ体験日時のご案内をお送りします。</p>' +
     '</div>';
 });
 </script>
