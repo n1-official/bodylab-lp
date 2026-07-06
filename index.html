@@ -202,8 +202,17 @@ h1 .gold{color:var(--gold)}
   margin-top:30px;max-width:34em;
   color:rgba(236,234,228,.8);font-size:clamp(14px,1.5vw,15.5px);line-height:2.15;
 }
-.hero-ctas{margin-top:44px;display:flex;flex-direction:column;align-items:flex-start;gap:0}
-.hero-ctas .cta-note{margin-top:20px}
+.hero-ctas{margin-top:44px}
+.cta-block{display:inline-flex;flex-direction:column;align-items:stretch}
+.cta-block .cta-note{
+  margin-top:14px;text-align:center;
+  font-size:11.5px;letter-spacing:.14em;white-space:nowrap;
+}
+.cta-block .cta-note i{font-style:normal;color:var(--gold-soft);margin:0 .5em}
+@media(max-width:640px){
+  .cta-block{display:flex;width:100%}
+  .cta-block .cta-note{white-space:normal}
+}
 .hero-vert{
   position:absolute;right:28px;top:50%;transform:translateY(-50%);z-index:2;
   writing-mode:vertical-rl;
@@ -542,8 +551,10 @@ footer{border-top:1px solid var(--hairline);padding:70px 0 46px;background:var(-
     <h1 class="reveal d1">「また戻った」を、<br><span class="gold">最後</span>にする。</h1>
     <p class="hero-sub reveal d2">完全個室のマンツーマン指導と、管理栄養士監修の食事サポート。<br>2ヶ月で、リバウンドしない身体のつくり方を身につける。</p>
     <div class="hero-ctas reveal d3">
-      <a class="btn" href="#reserve"><span>無料体験を予約する</span><span class="arw">&rarr;</span></a>
-      <span class="cta-note">所要60分／手ぶらでOK／無理な勧誘はありません</span>
+      <div class="cta-block">
+        <a class="btn" href="#reserve"><span>無料体験を予約する</span><span class="arw">&rarr;</span></a>
+        <span class="cta-note">所要60分<i>・</i>手ぶらでOK<i>・</i>無理な勧誘なし</span>
+      </div>
     </div>
   </div>
   <div class="hero-vert">中目黒駅 徒歩四分・完全個室</div>
